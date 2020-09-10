@@ -170,7 +170,7 @@ class MethodNode(object):
             if c == '[':
                 dim += 1
                 index += 1
-            elif constants.BASIC_TYPES.has_key(c):
+            elif c in constants.BASIC_TYPES:
                 self.paras.append(TypeNode(paras[index - dim:index + 1]))
                 index += 1
                 dim = 0

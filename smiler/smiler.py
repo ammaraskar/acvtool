@@ -35,7 +35,7 @@ def uninstall(package):
     logging.info(out)
 
 def request_pipe(cmd):
-    pipe = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    pipe = subprocess.Popen(cmd, encoding='utf8', stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     out, err = pipe.communicate()
 
     res = out

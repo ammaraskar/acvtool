@@ -89,7 +89,7 @@ class AndroidManifest:
             raise NoTagException("Cannot find tag: %s" % under_tag)
         elem = self.xml.createElement(tag)
         if attributes:
-            for entry in attributes.iteritems():
+            for entry in attributes.items():
                 elem.setAttribute(entry[0], entry[1])
         where[0].appendChild(elem)
     
