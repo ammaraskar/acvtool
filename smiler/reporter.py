@@ -2,19 +2,19 @@ import os
 import sys
 import cgi
 import smiler
-from config import config
+from smiler.config import config
 import javaobj
-import cPickle as pickle
+import pickle
 import shutil
 import logging
 from operator import attrgetter
-from granularity import Granularity
-from coverage import CoverageData
-from instrumenting.apkil.smalitree import SmaliTree
+from smiler.granularity import Granularity
+from smiler.coverage import CoverageData
+from smiler.instrumenting.apkil.smalitree import SmaliTree
 from chameleon import PageTemplateLoader
 from chameleon.utils import Markup
-from instrumenting.utils import Utils as Utils2
-from serialisation.xml_serialiser import XmlSerialiser
+from smiler.instrumenting.utils import Utils as Utils2
+from smiler.serialisation.xml_serialiser import XmlSerialiser
 import re
 
 COV_CLASS = 'cov' #html class, ex: '<span class="%COV_CLASS%"/>'

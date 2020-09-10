@@ -1,4 +1,4 @@
-from logger import log
+from smiler.instrumenting.apkil.logger import log
 
 class FieldNode(object):
 

@@ -1,4 +1,4 @@
-from logger import log
+from smiler.instrumenting.apkil.logger import log
 
 class LabelNode(object):
     '''Consists of label line including tries, switches and array data if any.'''

@@ -3,12 +3,12 @@ import re
 import sys
 import shutil
 import logging
-import cPickle as pickle
-from apkil.smalitree import SmaliTree
-from apkil.insnnode import InsnNode
+import pickle
+from smiler.instrumenting.apkil.smalitree import SmaliTree
+from smiler.instrumenting.apkil.insnnode import InsnNode
 from pkg_resources import resource_filename
-from utils import Utils
-from acv_reporter import AcvReporter
+from smiler.instrumenting.utils import Utils
+from smiler.instrumenting.acv_reporter import AcvReporter
 from ..granularity import Granularity
 
 class Instrumenter(object):

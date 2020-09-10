@@ -1,6 +1,6 @@
-import constants
-import insn35c
-from insn3rc import Insn3rc
+from smiler.instrumenting.apkil import constants
+from smiler.instrumenting.apkil import insn35c
+from smiler.instrumenting.apkil.insn3rc import Insn3rc
 
 class InsnNode(object):
 

@@ -8,7 +8,7 @@
 1. `Windows`/`OSX`/`Ubuntu`.
 3. `Java` version `1.8`.
 2. `Android SDK`.
-4. `Python` version  `2.7`.
+4. `Python` version  `3.x`.
 
 ## Installation
 1. Run the `pip` command to install dependencies:

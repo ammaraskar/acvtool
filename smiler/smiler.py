@@ -6,15 +6,15 @@ import threading
 import signal
 import logging
 import time
-from config import config
-from granularity import Granularity
-from instrumenting import manifest_instrumenter
-from libs.libs import Libs
-from instrumenting.apkil.smalitree import SmaliTree
-from instrumenting.apktool_interface import ApktoolInterface
-from instrumenting.smali_instrumenter import Instrumenter
-from instrumenting.utils import timeit
-from instrumenting.utils import Utils
+from smiler.config import config
+from smiler.granularity import Granularity
+from smiler.instrumenting import manifest_instrumenter
+from smiler.libs.libs import Libs
+from smiler.instrumenting.apkil.smalitree import SmaliTree
+from smiler.instrumenting.apktool_interface import ApktoolInterface
+from smiler.instrumenting.smali_instrumenter import Instrumenter
+from smiler.instrumenting.utils import timeit
+from smiler.instrumenting.utils import Utils
 
 apk_info_pattern = re.compile("package: name='(?P<package>.*?)'")
 

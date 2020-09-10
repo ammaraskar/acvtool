@@ -2,9 +2,9 @@ import os
 import copy
 import sys
 import shutil
-import StringIO
-import classnode 
-from logger import log
+from io import StringIO
+from smiler.instrumenting.apkil import classnode 
+from smiler.instrumenting.apkil.logger import log
 
 class SmaliTree(object):
 
@@ -21,7 +21,7 @@ class SmaliTree(object):
                 "".join([repr(class_) for class_ in self.classes]))
 
     def __parse(self, foldername):
-        print "parsing %s..." % foldername
+        print("parsing %s..." % foldername)
         self.foldername = foldername
         for (path, dirs, files) in os.walk(self.foldername):
             for f in files:
@@ -46,7 +46,7 @@ class SmaliTree(object):
     
     def add_class(self, class_node):
         if [c for c in self.classes if c.name == class_node.name]:
-            print "Class %s alreasy exsits!" % class_node.name
+            print("Class %s alreasy exsits!" % class_node.name)
             return False
         else:
             self.classes.append(copy.deepcopy(class_node))
@@ -57,7 +57,7 @@ class SmaliTree(object):
         pass
 
     def save(self, new_foldername):
-        print "Saving %s..." % new_foldername
+        print("Saving %s..." % new_foldername)
         if os.path.exists(new_foldername):
             shutil.rmtree(new_foldername)
         os.makedirs(new_foldername)

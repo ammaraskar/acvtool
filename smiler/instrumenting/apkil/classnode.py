@@ -1,9 +1,9 @@
-import methodnode
 import sys
 import os
-from logger import log
-from fieldnode import FieldNode
-from codeblocknode import CodeBlockNode
+from smiler.instrumenting.apkil import methodnode
+from smiler.instrumenting.apkil.logger import log
+from smiler.instrumenting.apkil.fieldnode import FieldNode
+from smiler.instrumenting.apkil.codeblocknode import CodeBlockNode
 
 class ClassNode(object):
 

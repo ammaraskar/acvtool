@@ -49,10 +49,10 @@ def runOnce(cmd, timeout_time=None, return_output=True, stdin_input=None):
         try:
             output, err = pipe.communicate()
             if err:
-                print err
+                print(err)
             if output is not None and len(output) > 0:
                 so.append(output)
-        except OSError, e:
+        except OSError as e:
             so.append("ERROR: OSError!")
         return_code.append(pipe.returncode)
     

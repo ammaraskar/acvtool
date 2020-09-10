@@ -1,4 +1,4 @@
-from granularity import Granularity
+from smiler.granularity import Granularity
 
 class CoverageData(object):
     ''' Coverage data for method, class, package or app. '''

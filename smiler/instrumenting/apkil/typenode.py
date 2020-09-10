@@ -1,4 +1,4 @@
-import constants
+from smiler.instrumenting.apkil import constants
 
 class TypeNode(object):
 

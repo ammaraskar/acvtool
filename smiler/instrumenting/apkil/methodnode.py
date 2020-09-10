@@ -1,12 +1,12 @@
-import constants
-import insnnode
-from logger import log
-from labelnode import LabelNode
-from arraydatanode import ArrayDataNode
-from typenode import TypeNode
-from trynode import TryNode
-from switchnode import SwitchNode
-from codeblocknode import CodeBlockNode
+from smiler.instrumenting.apkil import constants
+from smiler.instrumenting.apkil import insnnode
+from smiler.instrumenting.apkil.logger import log
+from smiler.instrumenting.apkil.labelnode import LabelNode
+from smiler.instrumenting.apkil.arraydatanode import ArrayDataNode
+from smiler.instrumenting.apkil.typenode import TypeNode
+from smiler.instrumenting.apkil.trynode import TryNode
+from smiler.instrumenting.apkil.switchnode import SwitchNode
+from smiler.instrumenting.apkil.codeblocknode import CodeBlockNode
 from operator import attrgetter
 
 class MethodNode(object):

@@ -1,6 +1,6 @@
 import codecs
 from xml.dom import minidom
-from general_exceptions import MsgException
+from smiler.instrumenting.general_exceptions import MsgException
 
 
 class AndroidManifest:

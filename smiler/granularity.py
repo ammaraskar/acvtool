@@ -8,7 +8,7 @@ class Granularity(object):
         "method": METHOD, 
         "class": CLASS
     }
-    default = GRANULARITIES.keys()[0]
+    default = "instruction"
     
     def __init__(self, granularity="instruction"):
         self.granularity = Granularity.GRANULARITIES[granularity]
