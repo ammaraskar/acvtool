@@ -31,9 +31,9 @@ class Granularity(object):
 
     @staticmethod
     def get(granularity_key):
-        if granularity_key in Granularity.GRANULARITIES.values():
-            index = Granularity.GRANULARITIES.values().index(granularity_key)
-            return Granularity.GRANULARITIES.keys()[index]
+        for granularity_method, granularity_num in Granularity.GRANULARITIES.items():
+            if granularity_key == granularity_num:
+                return granularity_method
         raise WrongGranularityValueException
     
 class WrongGranularityValueException(Exception):

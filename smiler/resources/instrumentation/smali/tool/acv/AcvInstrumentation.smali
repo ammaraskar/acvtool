@@ -727,7 +727,7 @@
     .line 94
     const-string v0, "coverageDir"
 
-    const-string v1, "/mnt/sdcard"
+    const-string v1, "/data/user/0/"
 
     invoke-virtual {p1, v0, v1}, Landroid/os/Bundle;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 
@@ -740,13 +740,17 @@
 
     invoke-direct {v2}, Ljava/lang/StringBuilder;-><init>()V
 
+    const-string v3, ""
+
+    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
     sget-object v3, Ltool/acv/AcvInstrumentation;->targetPackageName:Ljava/lang/String;
 
     invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     move-result-object v2
 
-    const-string v3, ".lock"
+    const-string v3, "/coverage.lock"
 
     invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 

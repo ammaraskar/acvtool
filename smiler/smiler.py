@@ -19,6 +19,7 @@ from smiler.instrumenting.utils import Utils
 apk_info_pattern = re.compile("package: name='(?P<package>.*?)'")
 
 CRASH_REPORT_FILENAME = "errors.txt"
+COVERAGE_PATH_PREFIX = "/data/user/0"
 
 def install(new_apk_path):
     logging.info("installing")
@@ -59,7 +60,7 @@ def get_apk_properties(path):
 
 
 def get_package_files_list(package_name):
-    cmd = '%s shell ls "/mnt/sdcard/%s/"' % (config.adb_path, package_name)
+    cmd = '%s shell run-as %s ls "%s/%s/"' % (config.adb_path, package_name, COVERAGE_PATH_PREFIX, package_name)
     out = request_pipe(cmd)
     files = [f for f in out.split() if not f.endswith('/')]
     return files  
@@ -77,20 +78,24 @@ def get_execution_results(package_name, output_dir):
         shutil.rmtree(output_dir)
     os.makedirs(output_dir)
     
+    # Don't attempt to pull in result files right now.
+    """
     for f in result_files:
         adb_pull(package_name, f, output_dir)
         adb_delete_files(package_name, f)
+    """
     if crash_file:
         adb_pull(package_name, crash_file, output_dir)
         adb_delete_files(package_name, crash_file)
 
 def adb_pull(package_name, file_path, pull_to):
-    cmd = "%s pull mnt/sdcard/%s/%s %s" % (config.adb_path, package_name, file_path, os.path.abspath(pull_to))
+    cmd = "%s pull %s/%s/%s %s" % (config.adb_path, COVERAGE_PATH_PREFIX, package_name, file_path, os.path.abspath(pull_to))
+    print(cmd)
     out = request_pipe(cmd)
     logging.info(out)
 
 def adb_delete_files(package_name, file_name):
-    cmd = "%s shell rm mnt/sdcard/%s/%s" % (config.adb_path, package_name, file_name)
+    cmd = "%s shell rm %s/%s/%s" % (config.adb_path, COVERAGE_PATH_PREFIX, package_name, file_name)
     out = request_pipe(cmd)
 
 def grant_storage_permission(package):
@@ -108,29 +113,33 @@ def start_instrumenting(package, release_thread=False, onstop=None, timeout=None
     if release_thread:
         os.system(cmd)
         return
-    out = ''
+
+    stop_event = threading.Event()
     def run():
-        out = request_pipe(cmd)
-        logging.info(out)
-        
-    original_sigint = signal.getsignal(signal.SIGINT)
-    
-    def stop(signum, frame):
-        signal.signal(signal.SIGINT, original_sigint)
-        stop_instrumenting(package, timeout)
-        if onstop:
-            onstop()
+        adb_process = subprocess.Popen(cmd)
+        stop_event.wait()
+        adb_process.kill()
+        adb_process.wait()
 
     t = threading.Thread(target=run)
     t.start()
     
     print("Press Ctrl+C to finish ...")
-    signal.signal(signal.SIGINT, stop)
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        stop_event.set()
+    t.join()
+
+    stop_instrumenting(package, timeout)
+    if onstop:
+        onstop()
     
 def coverage_is_locked(package_name):
-    cmd = "{} shell \"test -e /mnt/sdcard/{}.lock > /dev/null 2>&1 && echo \'1\' || echo \'0\'\"".format(config.adb_path, package_name)
+    cmd = "{} shell \"test -e /data/user/0/{}/coverage.lock > /dev/null 2>&1 && echo \'1\' || echo \'0\'\"".format(config.adb_path, package_name)
     logging.debug('Command to check lock file:' + cmd)
-    locked = subprocess.check_output(cmd, shell=True).replace("\n","").replace("\r", "")
+    locked = subprocess.check_output(cmd, encoding='utf8', shell=True).replace("\n","").replace("\r", "")
     return locked == '1'
 
 def stop_instrumenting(package_name, timeout=None):
@@ -151,10 +160,10 @@ def stop_instrumenting(package_name, timeout=None):
     coverage_files = [f for f in files if f.endswith(".ec")]
     crash_file = CRASH_REPORT_FILENAME if CRASH_REPORT_FILENAME in files else None
 
-    logging.info("coverage files at /mnt/sdcard/{0}:".format(package_name))
+    logging.info("coverage files at {}/{}:".format(COVERAGE_PATH_PREFIX, package_name))
     logging.info("\n".join(coverage_files))
     if crash_file:
-        logging.info("crash report /mnt/sdcard/{0}/{1}".format(package_name, crash_file))
+        logging.info("crash report {}/{}/{}".format(COVERAGE_PATH_PREFIX, package_name, crash_file))
 
 @timeit
 def instrument_apk(apk_path, result_dir, dbg_start=None, dbg_end=None, installation=False, granularity=Granularity.default, mem_stats=None):

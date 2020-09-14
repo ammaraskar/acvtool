@@ -1,7 +1,7 @@
 import os
 import sys
 import cgi
-import smiler
+from smiler.smiler import get_execution_results
 from smiler.config import config
 import javaobj
 import pickle
@@ -25,7 +25,7 @@ def generate(package, pickle_path, output_dir, ec_dir=None, xml=True, html=True,
     report_dir = os.path.join(output_dir, package, 'report')
     if ec_dir is None:
         ec_dir = config.get_ec_dir(output_dir, package)
-        smiler.get_execution_results(package, ec_dir)
+        get_execution_results(package, ec_dir)
     recreate_dir(report_dir)
     logging.info("report generating...")
     ec_files = [os.path.join(ec_dir, f) for f in os.listdir(ec_dir) if os.path.isfile(os.path.join(ec_dir, f))]
@@ -56,7 +56,7 @@ def save_xml_report(output_dir, smalitree, app_name, granularity):
     xml = generate_xml(smalitree, app_name, granularity)
     path = os.path.join(output_dir, 'acvtool-report.xml')
 
-    with open(path, 'w') as f:
+    with open(path, 'wb') as f:
         f.write(xml)
 
 def save_html_report(output_dir, smalitree, app_name, granularity):
