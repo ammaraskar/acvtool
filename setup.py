@@ -7,7 +7,6 @@ setup(
     version='0.1',
     packages=find_packages(),
     install_requires=[
-        'javaobj-py3',
         'chameleon',
         'pyyaml==3.12',
         'lxml',

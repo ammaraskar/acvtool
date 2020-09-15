@@ -1,5 +1,4 @@
 six==1.11.0
-javaobj-py3
 chameleon
 pyyaml==3.12
 lxml

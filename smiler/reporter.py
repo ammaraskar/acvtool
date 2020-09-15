@@ -1,9 +1,8 @@
 import os
 import sys
-import cgi
+from html import escape as html_escape
 from smiler.smiler import get_execution_results
 from smiler.config import config
-import javaobj
 import pickle
 import shutil
 import logging
@@ -238,7 +237,7 @@ def save_class(cl, class_template, output_dir, app_name, granularity):
             p.reload()
             ins_buf[0:0] = [span_tab_tag(d) for d in p.buf]
         ins_buf.insert(0, span_tab_tag(m.get_registers_line()))
-        html_method_line = span_tag(cgi.escape(m.get_method_line()), COV_CLASS) if m.called else m.get_method_line()
+        html_method_line = span_tag(html_escape(m.get_method_line()), COV_CLASS) if m.called else m.get_method_line()
         ins_buf.insert(0, html_method_line)
         ins_buf.append(LI_TAG(".end method"))
         buf.append(LI_TAG(''))
@@ -254,10 +253,18 @@ def save_class(cl, class_template, output_dir, app_name, granularity):
         f.write(html)
 
 def read_ec(ec_path):
-    pobj = ''
-    with open(ec_path, mode='rb') as f:
-        marshaller = javaobj.JavaObjectUnmarshaller(f)
-        pobj = marshaller.readObject()
+    pobj = []
+    with open(ec_path, mode='r') as f:
+        for line in f:
+            coverage_line = []
+            for char in line.strip():
+                if char == '0':
+                    coverage_line.append(False)
+                elif char == '1':
+                    coverage_line.append(True)
+                else:
+                    raise ValueError("Coverage file has unrecognized character: {}".format(char))
+            pobj.append(coverage_line)
     return pobj
 
 def cover_smalitree(st, coverage):

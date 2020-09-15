@@ -136,16 +136,11 @@ sput-object v0, Ltool/acv/AcvReporter;->{}:[Z
 
     .line 35
     :try_start_0
-    new-instance v2, Ljava/io/ObjectOutputStream;
+    new-instance v2, Ljava/io/FileOutputStream;
 
-    new-instance v3, Ljava/io/FileOutputStream;
-
-    invoke-direct {{v3, p0}}, Ljava/io/FileOutputStream;-><init>(Ljava/io/File;)V
-
-    invoke-direct {{v2, v3}}, Ljava/io/ObjectOutputStream;-><init>(Ljava/io/OutputStream;)V
+    invoke-direct {{v2, p0}}, Ljava/io/FileOutputStream;-><init>(Ljava/io/File;)V
 
     .line 36
-    .local v2, "out":Ljava/io/ObjectOutputStream;
     const/16 v3, {number} # number of smali/class files 
 
     new-array v0, v3, [[Z
@@ -159,16 +154,15 @@ sput-object v0, Ltool/acv/AcvReporter;->{}:[Z
     
     #end of array adding
 
-    invoke-virtual {{v2, v0}}, Ljava/io/ObjectOutputStream;->writeObject(Ljava/lang/Object;)V
+    invoke-static {{v2, v0}}, Ltool/acv/AcvReporter;->saveBooleanArrayToFile(Ljava/io/FileOutputStream;[[Z)V
 
-    invoke-virtual {{v2}}, Ljava/io/ObjectOutputStream;->flush()V
+    invoke-virtual {{v2}}, Ljava/io/FileOutputStream;->flush()V
 
-    invoke-virtual {{v2}}, Ljava/io/ObjectOutputStream;->close()V
+    invoke-virtual {{v2}}, Ljava/io/FileOutputStream;->close()V
     :try_end_0
     .catch Ljava/io/IOException; {{:try_start_0 .. :try_end_0}} :catch_0
 
     .end local v0    # "array":[[Z
-    .end local v2    # "out":Ljava/io/ObjectOutputStream;
     :goto_0
     return-void
 
@@ -205,5 +199,75 @@ sput-object v0, Ltool/acv/AcvReporter;->{}:[Z
     invoke-static {{v3, v4}}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     goto :goto_0
+.end method
+
+.method public static saveBooleanArrayToFile(Ljava/io/FileOutputStream;[[Z)V
+    .locals 8
+    .param p0, "fs"    # Ljava/io/FileOutputStream;
+    .param p1, "array"    # [[Z
+    .annotation system Ldalvik/annotation/Throws;
+        value = {{
+            Ljava/io/IOException;
+        }}
+    .end annotation
+
+    .line 28
+    array-length v0, p1
+
+    const/4 v1, 0x0
+
+    const/4 v2, 0x0
+
+    :goto_0
+    if-ge v2, v0, :cond_2
+
+    aget-object v3, p1, v2
+
+    .line 29
+    .local v3, "subarray":[Z
+    array-length v4, v3
+
+    const/4 v5, 0x0
+
+    :goto_1
+    if-ge v5, v4, :cond_1
+
+    aget-boolean v6, v3, v5
+
+    .line 30
+    .local v6, "elem":Z
+    if-eqz v6, :cond_0
+
+    const/16 v7, 0x31
+
+    goto :goto_2
+
+    :cond_0
+    const/16 v7, 0x30
+
+    :goto_2
+    invoke-virtual {{p0, v7}}, Ljava/io/FileOutputStream;->write(I)V
+
+    .line 29
+    .end local v6    # "elem":Z
+    add-int/lit8 v5, v5, 0x1
+
+    goto :goto_1
+
+    .line 32
+    :cond_1
+    const/16 v4, 0xa
+
+    invoke-virtual {{p0, v4}}, Ljava/io/FileOutputStream;->write(I)V
+
+    .line 28
+    .end local v3    # "subarray":[Z
+    add-int/lit8 v2, v2, 0x1
+
+    goto :goto_0
+
+    .line 34
+    :cond_2
+    return-void
 .end method
 '''
