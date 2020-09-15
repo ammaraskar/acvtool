@@ -35,8 +35,8 @@ def uninstall(package):
 
     logging.info(out)
 
-def request_pipe(cmd):
-    pipe = subprocess.Popen(cmd, encoding='utf8', stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+def request_pipe(cmd, encoding='utf8'):
+    pipe = subprocess.Popen(cmd, encoding=encoding, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     out, err = pipe.communicate()
 
     res = out
@@ -78,24 +78,25 @@ def get_execution_results(package_name, output_dir):
         shutil.rmtree(output_dir)
     os.makedirs(output_dir)
     
-    # Don't attempt to pull in result files right now.
-    """
-    for f in result_files:
+    # Don't attempt to pull in all result files right now, just coverage reports.
+    for f in coverage_files:
         adb_pull(package_name, f, output_dir)
         adb_delete_files(package_name, f)
-    """
     if crash_file:
         adb_pull(package_name, crash_file, output_dir)
         adb_delete_files(package_name, crash_file)
 
 def adb_pull(package_name, file_path, pull_to):
-    cmd = "%s pull %s/%s/%s %s" % (config.adb_path, COVERAGE_PATH_PREFIX, package_name, file_path, os.path.abspath(pull_to))
+    cmd = "{} shell run-as {} cat {}/{}/{}".format(
+        config.adb_path, package_name, COVERAGE_PATH_PREFIX, package_name, file_path)
     print(cmd)
-    out = request_pipe(cmd)
-    logging.info(out)
+    out = request_pipe(cmd, encoding=None)
+    with open(os.path.join(pull_to, file_path), 'wb') as f:
+        f.write(out)
 
 def adb_delete_files(package_name, file_name):
-    cmd = "%s shell rm %s/%s/%s" % (config.adb_path, COVERAGE_PATH_PREFIX, package_name, file_name)
+    cmd = "{} shell run-as {} rm {}/{}/{}".format(
+        config.adb_path, package_name, COVERAGE_PATH_PREFIX, package_name, file_name)
     out = request_pipe(cmd)
 
 def grant_storage_permission(package):
