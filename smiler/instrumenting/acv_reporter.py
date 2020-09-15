@@ -271,3 +271,18 @@ sput-object v0, Ltool/acv/AcvReporter;->{}:[Z
     return-void
 .end method
 '''
+
+"""
+Compiled from:
+
+    public static void saveBooleanArrayToFile(FileOutputStream fs, boolean[][] array) throws IOException {
+        for (boolean[] subarray : array) {
+            for (boolean elem : subarray) {
+                fs.write(elem ? '1' : '0');
+            }
+            fs.write('\n');
+        }
+    }
+
+Maybe we should consider using BitSet here?
+"""
